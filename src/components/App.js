@@ -1,23 +1,23 @@
-  import React, { Component } from 'react'
-  import { connect } from 'react-redux'
-  import { addRecipe, removeFromCalendar } from '../actions'
-  import { capitalize } from '../utils/helpers'
-  import CalendarIcon from 'react-icons/lib/fa/calendar-plus-o'
-  import Modal from 'react-modal'
-  import ArrowRightIcon from 'react-icons/lib/fa/arrow-circle-right'
-  import Loading from 'react-loading'
-  import { fetchRecipes } from '../utils/api'
-  import FoodList from './FoodList'
-  import ShoppingList from './ShoppingList'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { addRecipe, removeFromCalendar } from '../actions'
+import { capitalize } from '../utils/helpers'
+import CalendarIcon from 'react-icons/lib/fa/calendar-plus-o'
+import Modal from 'react-modal'
+import ArrowRightIcon from 'react-icons/lib/fa/arrow-circle-right'
+import Loading from 'react-loading'
+import { fetchRecipes } from '../utils/api'
+import FoodList from './FoodList'
+import ShoppingList from './ShoppingList'
 
-  class App extends Component {
+class App extends Component {
   state = {
     foodModalOpen: false,
     meal: null,
     day: null,
     food: null,
-    loadingFood: false,
     ingredientsModalOpen: false,
+    loadingFood: false,
   }
   openFoodModal = ({ meal, day }) => {
     this.setState(() => ({
@@ -49,12 +49,11 @@
         loadingFood: false,
       })))
   }
-
   openIngredientsModal = () => this.setState(() => ({ ingredientsModalOpen: true }))
   closeIngredientsModal = () => this.setState(() => ({ ingredientsModalOpen: false }))
   generateShoppingList = () => {
     return this.props.calendar.reduce((result, { meals }) => {
-     const { breakfast, lunch, dinner } = meals
+      const { breakfast, lunch, dinner } = meals
 
       breakfast && result.push(breakfast)
       lunch && result.push(lunch)
@@ -64,7 +63,6 @@
     }, [])
     .reduce((ings, { ingredientLines }) => ings.concat(ingredientLines), [])
   }
-
   render() {
     const { foodModalOpen, loadingFood, food, ingredientsModalOpen } = this.state
     const { calendar, selectRecipe, remove } = this.props
@@ -74,14 +72,14 @@
     return (
       <div className='container'>
 
-      <div className='nav'>
-        <h1 className='header'>UdaciMeals</h1>
-        <button
-          className='shopping-list'
-          onClick={this.openIngredientsModal}>
-            Shopping List
-        </button>
-      </div>
+        <div className='nav'>
+          <h1 className='header'>UdaciMeals</h1>
+          <button
+            className='shopping-list'
+            onClick={this.openIngredientsModal}>
+              Shopping List
+          </button>
+        </div>
 
         <ul className='meal-types'>
           {mealOrder.map((mealType) => (
@@ -155,20 +153,21 @@
         </Modal>
 
         <Modal
-           className='modal'
-           overlayClassName='overlay'
-           isOpen={ingredientsModalOpen}
-           onRequestClose={this.closeIngredientsModal}
-           contentLabel='Modal'
-         >
-           {ingredientsModalOpen && <ShoppingList list={this.generateShoppingList()}/>}
+          className='modal'
+          overlayClassName='overlay'
+          isOpen={ingredientsModalOpen}
+          onRequestClose={this.closeIngredientsModal}
+          contentLabel='Modal'
+        >
+          {ingredientsModalOpen && <ShoppingList list={this.generateShoppingList()}/>}
         </Modal>
-        </div>
-      )
-    }
-  }
 
-  function mapStateToProps ({ food, calendar }) {
+      </div>
+    )
+  }
+}
+
+function mapStateToProps ({ food, calendar }) {
   const dayOrder = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
   return {
@@ -183,16 +182,16 @@
       }, {})
     })),
   }
-  }
+}
 
-  function mapDispatchToProps (dispatch) {
+function mapDispatchToProps (dispatch) {
   return {
     selectRecipe: (data) => dispatch(addRecipe(data)),
     remove: (data) => dispatch(removeFromCalendar(data))
   }
-  }
+}
 
-  export default connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-  )(App)
+)(App)
